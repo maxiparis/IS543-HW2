@@ -18,7 +18,24 @@
 
 import SwiftUI
 
+//MARK: - ContentView
+
 struct ContentView: View {
+    var body: some View {
+        VStack {
+            FibonacciView()
+            FactorialView()
+        }
+    }
+}
+
+#Preview {
+    ContentView()
+}
+
+//MARK: - Fibonacci sequence
+
+struct FibonacciView: View {
     @State var fibonacciIthNumber = ""
     @State var fibonacciResult: Int = 0
     @State var intFib: Int = 0
@@ -30,7 +47,7 @@ struct ContentView: View {
                 HStack {
                     Text("Fibonacci ith number:")
                     Spacer()
-                    TextField("Enter number", text: $fibonacciIthNumber)
+                    TextField("Enter ith number", text: $fibonacciIthNumber)
                         .multilineTextAlignment(.trailing)
                         .keyboardType(UIKeyboardType.numberPad)
                         .onChange(of: fibonacciIthNumber) { oldValue, newValue in
@@ -43,9 +60,9 @@ struct ContentView: View {
                     Button("Calculate"){
                         fibonacciResult = calculateIthFibonacci(intFib)
                     }
-                        .buttonStyle(BorderedButtonStyle())
-                        .disabled(fibonacciIthNumber == "" || intFib > 30) //limit to computations to avoid crashing due to overload
-                        
+                    .buttonStyle(BorderedButtonStyle())
+                    .disabled(fibonacciIthNumber == "" || intFib > 30) //limit to computations to avoid crashing due to overload
+                    
                     Spacer()
                     Text(fibonacciResult.description)
                 }
@@ -62,6 +79,45 @@ struct ContentView: View {
     }
 }
 
-#Preview {
-    ContentView()
+//MARK: - Factorial
+//calculates the factorial of a number: ex: factorial(4) = 4 * 3 * 2 * 1 = 24
+
+struct FactorialView: View {
+    
+    @State var factorialNumber = ""
+    @State var factorialResult: Int = 0
+    @State var intFac: Int = 0
+    
+    var body: some View {
+        VStack {
+            HStack {
+                Text("Factorial ith number:")
+                Spacer()
+                TextField("Enter ith number", text: $factorialNumber)
+                    .multilineTextAlignment(.trailing)
+                    .keyboardType(UIKeyboardType.numberPad)
+                    .onChange(of: factorialNumber) { oldValue, newValue in
+                        if let intFibValue = Int(newValue) {
+                            intFac = intFibValue
+                        }
+                    }
+            }
+            HStack {
+                Button("Calculate"){
+                    factorialResult = calculateFactorial(intFac)
+                }
+                .buttonStyle(BorderedButtonStyle())
+                .disabled(factorialNumber == "" || intFac > 30) //limit to computations to avoid crashing due to overload
+                
+                Spacer()
+                Text(factorialResult.description)
+            }
+        }
+        .padding()
+    }
+    
+    func calculateFactorial(_ ith: Int) -> Int {
+        //TODO: work on this part, make a for i loop
+        return 0
+    }
 }
