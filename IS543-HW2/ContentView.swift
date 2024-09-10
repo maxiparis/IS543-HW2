@@ -33,7 +33,7 @@ struct ContentView: View {
     ContentView()
 }
 
-//MARK: - Fibonacci sequence
+//MARK: - Fibonacci
 
 struct FibonacciView: View {
     @State var fibonacciIthNumber = ""
@@ -91,9 +91,9 @@ struct FactorialView: View {
     var body: some View {
         VStack {
             HStack {
-                Text("Factorial ith number:")
+                Text("Factorial of:")
                 Spacer()
-                TextField("Enter ith number", text: $factorialNumber)
+                TextField("Enter number", text: $factorialNumber)
                     .multilineTextAlignment(.trailing)
                     .keyboardType(UIKeyboardType.numberPad)
                     .onChange(of: factorialNumber) { oldValue, newValue in
@@ -117,7 +117,9 @@ struct FactorialView: View {
     }
     
     func calculateFactorial(_ ith: Int) -> Int {
-        //TODO: work on this part, make a for i loop
-        return 0
+        if (ith == 1) {
+            return 1
+        }
+        return ith * calculateFactorial(ith-1)
     }
 }
