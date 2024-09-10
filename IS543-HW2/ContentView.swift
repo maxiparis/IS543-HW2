@@ -25,6 +25,7 @@ struct ContentView: View {
         VStack {
             FibonacciView()
             FactorialView()
+            IntegersSumView()
         }
     }
 }
@@ -121,5 +122,47 @@ struct FactorialView: View {
             return 1
         }
         return ith * calculateFactorial(ith-1)
+    }
+}
+
+
+
+//MARK: - Sum of integers in range
+
+struct IntegersSumView: View {
+    
+    @State var firstNumber = ""
+    @State var secondNumber = ""
+    @State var sumResult: Int = 0
+    
+    var body: some View {
+        VStack {
+            HStack {
+                Text("Integers sum between:")
+                TextField("First number", text: $firstNumber)
+                    .multilineTextAlignment(.trailing)
+                    .keyboardType(UIKeyboardType.numberPad)
+                TextField("Second number", text: $secondNumber)
+                    .multilineTextAlignment(.trailing)
+                    .keyboardType(UIKeyboardType.numberPad)
+                    
+            }
+            HStack {
+                Button("Calculate"){
+                    if let first = Int(firstNumber), let second = Int(secondNumber) {
+                        sumResult = calculateSum(from: first, to: second)
+                    }
+                }
+                .buttonStyle(BorderedButtonStyle())
+                .disabled(firstNumber == "" && secondNumber == "")
+                Spacer()
+                Text(sumResult.description)
+            }
+        }
+        .padding()
+    }
+    
+    func calculateSum(from numberOne: Int, to numberTwo: Int) -> Int {
+        return 99
     }
 }
