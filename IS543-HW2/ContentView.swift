@@ -175,7 +175,7 @@ struct IntegersSumView: View {
                     }
                 }
                 .buttonStyle(BorderedButtonStyle())
-                .disabled(firstNumberInt == nil || secondNumberInt == nil) //TODO: make a function that checks if it is disabled or what?
+                .disabled(shouldButtonBeDisabled()) //TODO: make a function that checks if it is disabled or what?
                 Spacer()
                 Text(sumResult.description)
             }
@@ -189,5 +189,14 @@ struct IntegersSumView: View {
             sum += i
         }
         return sum
+    }
+    
+    func shouldButtonBeDisabled() -> Bool {
+        if let firstNumberInt, let secondNumberInt {
+            //disable if the first number is higher than the second number
+            return firstNumberInt >= secondNumberInt
+        }
+        //disable if one any of the numbers is nil
+        return firstNumberInt == nil || secondNumberInt == nil
     }
 }
