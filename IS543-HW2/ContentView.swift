@@ -127,25 +127,46 @@ struct FactorialView: View {
 
 
 
-//MARK: - Sum of integers in range
+//MARK: - Sum of integers
 
 struct IntegersSumView: View {
     
     @State var firstNumber = ""
     @State var secondNumber = ""
+    
+    @State var firstNumberInt: Int? = nil  //nil everytime the input is wrong like when someone enters a letter or something invalid.
+    @State var secondNumberInt: Int? = nil
+    
     @State var sumResult: Int = 0
     
     var body: some View {
         VStack {
             HStack {
                 Text("Integers sum between:")
+                Spacer()
+            }
+            HStack(alignment: .center) {
+                Spacer()
                 TextField("First number", text: $firstNumber)
-                    .multilineTextAlignment(.trailing)
                     .keyboardType(UIKeyboardType.numberPad)
+                    .onChange(of: firstNumber) { oldValue, newValue in
+                        if let convertedNumber = Int(newValue), convertedNumber >= 0 {
+                            firstNumberInt = convertedNumber
+                        } else {
+                            firstNumberInt = nil
+                        }
+                    }
                 TextField("Second number", text: $secondNumber)
-                    .multilineTextAlignment(.trailing)
                     .keyboardType(UIKeyboardType.numberPad)
-                    
+                    .multilineTextAlignment(TextAlignment.trailing)
+                    .onChange(of: secondNumber) { oldValue, newValue in
+                        if let convertedNumber = Int(newValue), convertedNumber >= 0 {
+                            secondNumberInt = convertedNumber
+                        } else {
+                            secondNumberInt = nil
+                        }
+                    }
+                Spacer()
             }
             HStack {
                 Button("Calculate"){
@@ -154,7 +175,7 @@ struct IntegersSumView: View {
                     }
                 }
                 .buttonStyle(BorderedButtonStyle())
-                .disabled(firstNumber == "" && secondNumber == "")
+                .disabled(firstNumberInt == nil || secondNumberInt == nil) //TODO: make a function that checks if it is disabled or what?
                 Spacer()
                 Text(sumResult.description)
             }
@@ -163,6 +184,10 @@ struct IntegersSumView: View {
     }
     
     func calculateSum(from numberOne: Int, to numberTwo: Int) -> Int {
-        return 99
+        var sum = 0
+        for i in numberOne...numberTwo {
+            sum += i
+        }
+        return sum
     }
 }
