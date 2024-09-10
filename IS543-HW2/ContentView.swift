@@ -20,27 +20,45 @@ import SwiftUI
 
 struct ContentView: View {
     @State var fibonacciIthNumber = ""
-    @State var fibonacciResult = ""
+    @State var fibonacciResult: Int = 0
+    @State var intFib: Int = 0
     
     var body: some View {
         VStack {
             // fibonacci number
             VStack {
                 HStack {
-                    Text("Fibonacci ith number")
+                    Text("Fibonacci ith number:")
+                    Spacer()
                     TextField("Enter number", text: $fibonacciIthNumber)
+                        .multilineTextAlignment(.trailing)
+                        .keyboardType(UIKeyboardType.numberPad)
+                        .onChange(of: fibonacciIthNumber) { oldValue, newValue in
+                            if let intFibValue = Int(newValue) {
+                                intFib = intFibValue
+                            }
+                        }
                 }
                 HStack {
-                    Text("    Result:")
-                    Text("")
+                    Button("Calculate"){
+                        fibonacciResult = calculateIthFibonacci(intFib)
+                    }
+                        .buttonStyle(BorderedButtonStyle())
+                        .disabled(fibonacciIthNumber == "" || intFib > 30) //limit to computations to avoid crashing due to overload
+                        
                     Spacer()
+                    Text(fibonacciResult.description)
                 }
             }
-            
-
-            
         }
         .padding()
+    }
+    
+    func calculateIthFibonacci(_ ith: Int) -> Int {
+        if (ith == 0 || ith == 1 || ith == 2) {
+            return 1
+        }
+        return calculateIthFibonacci(ith-1) + calculateIthFibonacci(ith-2)
     }
 }
 
