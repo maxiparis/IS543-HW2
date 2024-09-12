@@ -209,7 +209,7 @@ struct CentsToCoinsView: View {
     
     @State var centsInput = ""
     @State var coinsResult: String = "Result"
-    @State var centsInt: Int = 0
+    @State var centsInt: Int? = nil
     
     //Value of coins in cents
     let QUARTER_IN_CENTS: Int = 25
@@ -226,18 +226,22 @@ struct CentsToCoinsView: View {
                     .multilineTextAlignment(.trailing)
                     .keyboardType(UIKeyboardType.numberPad)
                     .onChange(of: centsInput) { oldValue, newValue in
-                        if let centsAsInt = Int(newValue) {
+                        if let centsAsInt = Int(newValue), centsAsInt > 0 {
                             centsInt = centsAsInt
+                        } else {
+                            centsInt = nil
                         }
                     }
             }
+            
             HStack {
                 Button("Calculate"){
-                    coinsResult = convertToCoins(cents: centsInt)
+                    if let centsInt {
+                        coinsResult = convertToCoins(cents: centsInt)
+                    }
                 }
                 .buttonStyle(BorderedButtonStyle())
-                .disabled(centsInput == "" || centsInt > 99999) //limit to computations to avoid crashing due to overload
-                
+                .disabled(centsInt == nil || centsInt! > 999999)
                 Spacer()
                 Text(coinsResult)
             }
@@ -287,22 +291,22 @@ struct CentsToCoinsView: View {
         var texts: [String] = []
         
         if (quarters > 0) {
-            var quarterText = quarters == 1 ? "\(quarters) quarter" : "\(quarters) quarters"
+            let quarterText = quarters == 1 ? "\(quarters) quarter" : "\(quarters) quarters"
             texts.append(quarterText)
         }
         
         if (dimes > 0) {
-            var dimeText = dimes == 1 ? "\(dimes) dime" : "\(dimes) dimes"
+            let dimeText = dimes == 1 ? "\(dimes) dime" : "\(dimes) dimes"
             texts.append(dimeText)
         }
         
         if (nickels > 0) {
-            var nickelsText = nickels == 1 ? "\(nickels) nickel" : "\(nickels) nickels"
+            let nickelsText = nickels == 1 ? "\(nickels) nickel" : "\(nickels) nickels"
             texts.append(nickelsText)
         }
         
         if (pennies > 0) {
-            var penniesText = pennies == 1 ? "\(pennies) penny" : "\(pennies) pennies"
+            let penniesText = pennies == 1 ? "\(pennies) penny" : "\(pennies) pennies"
             texts.append(penniesText)
         }
         
