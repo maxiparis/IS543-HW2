@@ -211,6 +211,12 @@ struct CentsToCoinsView: View {
     @State var coinsResult: String = "Result"
     @State var centsInt: Int = 0
     
+    //Value of coins in cents
+    let QUARTER_IN_CENTS: Int = 25
+    let DIME_IN_CENTS: Int = 10
+    let NICKEL_IN_CENTS: Int = 5
+    let PENNY_IN_CENTS: Int = 1
+    
     var body: some View {
         VStack {
             HStack {
@@ -227,7 +233,7 @@ struct CentsToCoinsView: View {
             }
             HStack {
                 Button("Calculate"){
-                    coinsResult = convertCentsToCoins(centsInt)
+                    coinsResult = convertToCoins(cents: centsInt)
                 }
                 .buttonStyle(BorderedButtonStyle())
                 .disabled(centsInput == "" || centsInt > 99999) //limit to computations to avoid crashing due to overload
@@ -239,9 +245,74 @@ struct CentsToCoinsView: View {
         .padding()
     }
     
-    func convertCentsToCoins(_ cents: Int) -> String {
+    
+    //TEST: Example: for 88, the answer is “3 quarters”, “1 dime”, “3 pennies”.
+    
+    func convertToCoins(cents: Int) -> String {
         var result = "2 quarters"
-        print(result) //since instructions say to print to console...
+        var remainingCents = cents
+        
+        let quarters = coinsRequired(cents: remainingCents, coin: QUARTER_IN_CENTS)
+        remainingCents -= quarters * QUARTER_IN_CENTS
+        
+        let dimes = coinsRequired(cents: remainingCents, coin: DIME_IN_CENTS)
+        remainingCents -= dimes * DIME_IN_CENTS
+        
+        let nickel = coinsRequired(cents: remainingCents, coin: NICKEL_IN_CENTS)
+        remainingCents -= nickel * NICKEL_IN_CENTS
+        
+        let pennies = coinsRequired(cents: remainingCents, coin: PENNY_IN_CENTS)
+        remainingCents -= pennies * PENNY_IN_CENTS
+        
+        result = generateCoinString(quarters: quarters, dimes: dimes, nickels: nickel, pennies: pennies)
+        
+        print("\(cents) cents = \(result)") //since instructions say to print to console...
         return result
+    }
+    
+    
+   
+    /**
+     Returns the minimum number of coins needed for the given amount in cents.
+     */
+    func coinsRequired(cents: Int, coin: Int) -> Int {
+        return cents / coin
+    }
+    
+    /**
+     Generates the message according to the coins passed through the parameters.
+     */
+    func generateCoinString(quarters: Int, dimes: Int, nickels: Int, pennies: Int) -> String {
+        var message: String = ""
+        var texts: [String] = []
+        
+        if (quarters > 0) {
+            var quarterText = quarters == 1 ? "\(quarters) quarter" : "\(quarters) quarters"
+            texts.append(quarterText)
+        }
+        
+        if (dimes > 0) {
+            var dimeText = dimes == 1 ? "\(dimes) dime" : "\(dimes) dimes"
+            texts.append(dimeText)
+        }
+        
+        if (nickels > 0) {
+            var nickelsText = nickels == 1 ? "\(nickels) nickel" : "\(nickels) nickels"
+            texts.append(nickelsText)
+        }
+        
+        if (pennies > 0) {
+            var penniesText = pennies == 1 ? "\(pennies) penny" : "\(pennies) pennies"
+            texts.append(penniesText)
+        }
+        
+        for i in texts.indices {
+            message += texts[i]
+            if (i != texts.count - 1) {
+                message += ", "
+            }
+        }
+        
+        return message
     }
 }
