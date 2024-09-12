@@ -26,6 +26,7 @@ struct ContentView: View {
             FibonacciView()
             FactorialView()
             IntegersSumView()
+            CentsToCoinsView()
         }
     }
 }
@@ -198,5 +199,49 @@ struct IntegersSumView: View {
         }
         //disable if one any of the numbers is nil
         return firstNumberInt == nil || secondNumberInt == nil
+    }
+}
+
+
+//MARK: - Cents to US Coins
+
+struct CentsToCoinsView: View {
+    
+    @State var centsInput = ""
+    @State var coinsResult: String = "Result"
+    @State var centsInt: Int = 0
+    
+    var body: some View {
+        VStack {
+            HStack {
+                Text("Cents:")
+                Spacer()
+                TextField("Enter cents", text: $centsInput)
+                    .multilineTextAlignment(.trailing)
+                    .keyboardType(UIKeyboardType.numberPad)
+                    .onChange(of: centsInput) { oldValue, newValue in
+                        if let centsAsInt = Int(newValue) {
+                            centsInt = centsAsInt
+                        }
+                    }
+            }
+            HStack {
+                Button("Calculate"){
+                    coinsResult = convertCentsToCoins(centsInt)
+                }
+                .buttonStyle(BorderedButtonStyle())
+                .disabled(centsInput == "" || centsInt > 99999) //limit to computations to avoid crashing due to overload
+                
+                Spacer()
+                Text(coinsResult)
+            }
+        }
+        .padding()
+    }
+    
+    func convertCentsToCoins(_ cents: Int) -> String {
+        var result = "2 quarters"
+        print(result) //since instructions say to print to console...
+        return result
     }
 }
